@@ -44,3 +44,4 @@ jspm_packages
 *.tgz
 
 pg_data
+.DS_Store
