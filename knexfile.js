@@ -2,5 +2,5 @@
 
 module.exports = {
 	client: "pg",
-	connection: "postgres://localhost/overwatch-stats-api"
+	connection: process.env.DATABASE_URL
 };
