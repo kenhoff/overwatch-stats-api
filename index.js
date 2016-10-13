@@ -4,12 +4,16 @@ if (process.env.NODE_ENV != "production") {
 	require("dotenv").config()
 }
 
-const app = require("express")();
+const express = require('express');
+const app = express();
+
 const knex = require("knex")(require("./knexfile.js"));
 
 knex.migrate.latest();
 
 const getPlayerRank = require("./getPlayerRank.js");
+
+app.use(express.static(__dirname + "/static"))
 
 app.get("/players/:player_battletag", function(req, res) {
 	let player_battletag = req.params.player_battletag;
