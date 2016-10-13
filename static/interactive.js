@@ -7,7 +7,8 @@ $("form").submit(function(event) {
 	}
 	// set "submitting"
 	submitting = true;
-	$("form button").html('Getting stats...<i class="fa fa-spinner fa-pulse fa-fw"></i>').attr("disabled", true)
+	$(".results").addClass("hidden");
+	$("form button").html("Getting stats...<i class='fa fa-spinner fa-pulse fa-fw'></i>").attr("disabled", true);
 	$.get("/players/" + encodeURIComponent($("input").val()))
 		.done(function(data) {
 			// replace contents of pre/code in results section with data
@@ -17,12 +18,13 @@ $("form").submit(function(event) {
 		.fail(function(jqxhr, textStatus, err) {
 			// replace contents of pre/code in results section with error
 			console.log(err);
+			$(".results > pre > code").text(err);
 		})
 		.always(function() {
 			$(".hidden").removeClass("hidden");
 			// unset submitting
 			submitting = false;
-			$("form button").html('Get stats').attr("disabled", false)
+			$("form button").html("Get stats").attr("disabled", false);
 		});
 });
 
