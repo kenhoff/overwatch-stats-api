@@ -4,36 +4,66 @@
 
 <head>
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<title>Overwatch Stats API</title>
-	<style media="screen">
-		body {
-			margin: 0;
-		}
-
-		header {
-			min-height: 100vh;
-			background-image: url("gibraltar.jpg");
-			background-position: center;
-			background-size: cover;
-			color: white;
-		}
-	</style>
+	<link href="https://fonts.googleapis.com/css?family=EB+Garamond|Montserrat:700" rel="stylesheet">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+	<link rel="stylesheet" href="/style.css" media="screen">
+	<script src="http://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 </head>
 
 <body>
 	<!-- hero -->
 	<header>
 		<h1>The Unofficial Overwatch Stats API</h1>
-		<p>
+		<h2>
 			because web scraping sucks
-		</p>
+		</h2>
+		<div class="tryit">
+			<p>
+				Try it
+			</p>
+			<i class="fa fa-angle-double-down fa-3x" aria-hidden="true"></i>
+		</div>
 	</header>
 	<!-- try it -->
 	<section>
-
+		<div class="interactive">
+			<form>
+				<label for="battletag">Battletag (case sensitive)</label>
+				<input id="battletag" type="text" placeholder="notajetski#1447">
+				<button>
+					<span>
+						Get stats
+					</span>
+				</button>
+			</form>
+			<div class="results hidden">
+				<pre><code></code></pre>
+			</div>
+		</div>
+		<div>
+			<p>
+				Or, copy and paste to your command line:
+			</p>
+			<pre><code class="curl">curl http://overwatch-stats-api.herokuapp.com/players/notajetski%231447</code></pre>
+		</div>
+		<p>
+			WIP, obviously. Contact <a class="email" target="_blank" href="mailto:ken@hoff.tech">ken@hoff.tech</a> before using in production apps, or feel free to just say hi.
+		</p>
 	</section>
 	<!-- code by hofftech -->
-	<footer></footer>
+	<footer>
+		<p>
+			Overwatch is copyright Blizzard, Activision, etc, duh
+		</p>
+		<a href="https://hoff.tech" target="_blank" class="hofftech">
+			<i class="fa fa-code"></i>
+			<span>by</span>
+			<span class="logo">HOFFTECH</span>
+		</a>
+	</footer>
+	<script src="/interactive.js" charset="utf-8"></script>
 </body>
 
 </html>
