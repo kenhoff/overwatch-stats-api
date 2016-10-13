@@ -29,5 +29,5 @@ $("form").submit(function(event) {
 });
 
 $("#battletag").on("input", function() {
-	$(".curl").text("curl http://overwatch-stats-api.herokuapp.com/players/" + encodeURIComponent($("input").val()));
+	$(".curl").text("curl http://www.overwatch-stats-api.com/players/" + encodeURIComponent($("input").val()));
 });
