@@ -1,10 +1,10 @@
 console.log("Starting up...");
 
 if (process.env.NODE_ENV != "production") {
-	require("dotenv").config()
+	require("dotenv").config();
 }
 
-const express = require('express');
+const express = require("express");
 const app = express();
 
 const knex = require("knex")(require("./knexfile.js"));
@@ -13,7 +13,7 @@ knex.migrate.latest();
 
 const getPlayerRank = require("./getPlayerRank.js");
 
-app.use(express.static(__dirname + "/static"))
+app.use(express.static(__dirname + "/static"));
 
 app.get("/players/:player_battletag", function(req, res) {
 	// request should have the battletag in the format of "notajetski-1447" or "notajetski#1447"
