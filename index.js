@@ -17,7 +17,16 @@ const getPlayerRank = require("./getPlayerRank.js");
 
 app.use(express.static(__dirname + "/static"));
 
+app.get("/players", function(req, res) {
+	return res.status(400).send({
+		"status": "error",
+		"error": "You need to include a valid battletag with number identifier in the URL, like /players/notajetski-1447."
+	});
+})
+
 app.get("/players/:player_battletag", function(req, res) {
+	// first, enforce that it's a valid battletag
+	// then, convert the battletag to include a "#" character
 	// request should have the battletag in the format of "notajetski-1447" or "notajetski#1447"
 	let player_battletag = req.params.player_battletag.replace("-", "#");
 	// battletag should be passed to getPlayerRank in the format of "notajetski#1447", **not** "notajetski-1447"
@@ -55,6 +64,8 @@ app.get("/players/:player_battletag", function(req, res) {
 });
 
 var port = process.env.PORT || 1234;
-app.listen(port, function() {
+var server = app.listen(port, function() {
 	debug("Listening on " + port + "...");
 });
+
+module.exports = server;
