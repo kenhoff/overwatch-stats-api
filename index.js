@@ -11,24 +11,28 @@ const app = express();
 
 const knex = require("knex")(require("./knexfile.js"));
 
-knex.migrate.latest();
+// knex.migrate.latest();
 
 const getPlayerRank = require("./getPlayerRank.js");
 
 app.use(express.static(__dirname + "/static"));
 
 app.get("/players", function(req, res) {
-	return res.status(400).send({
-		"status": "error",
-		"error": "You need to include a valid battletag with number identifier in the URL, like /players/notajetski-1447."
-	});
-})
+	return malformedBattleTagResponse(res);
+});
 
 app.get("/players/:player_battletag", function(req, res) {
-	// first, enforce that it's a valid battletag
-	// then, convert the battletag to include a "#" character
-	// request should have the battletag in the format of "notajetski-1447" or "notajetski#1447"
+	// convert the battletag to include a "#" character
 	let player_battletag = req.params.player_battletag.replace("-", "#");
+
+	// first, enforce that it's a valid battletag
+	let battletagParts = player_battletag.split("#");
+	let battletagIdentifier = battletagParts[1];
+	if (battletagParts.length != 2 || isNaN(parseInt(battletagIdentifier))) {
+		return malformedBattleTagResponse(res);
+	}
+
+	// request should have the battletag in the format of "notajetski-1447" or "notajetski#1447"
 	// battletag should be passed to getPlayerRank in the format of "notajetski#1447", **not** "notajetski-1447"
 	debug(player_battletag);
 	getPlayerRank(player_battletag, function(err, data) {
@@ -62,6 +66,13 @@ app.get("/players/:player_battletag", function(req, res) {
 		}
 	});
 });
+
+var malformedBattleTagResponse = function(res) {
+	return res.status(400).send({
+		"status": "error",
+		"error": "You need to include a valid battletag with number identifier, like /players/notajetski-1447."
+	});
+};
 
 var port = process.env.PORT || 1234;
 var server = app.listen(port, function() {
