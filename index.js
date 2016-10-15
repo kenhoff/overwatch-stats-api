@@ -1,4 +1,6 @@
-console.log("Starting up...");
+const debug = require("debug")("ow-stats-api");
+
+debug("Starting up...");
 
 if (process.env.NODE_ENV != "production") {
 	require("dotenv").config();
@@ -19,7 +21,7 @@ app.get("/players/:player_battletag", function(req, res) {
 	// request should have the battletag in the format of "notajetski-1447" or "notajetski#1447"
 	let player_battletag = req.params.player_battletag.replace("-", "#");
 	// battletag should be passed to getPlayerRank in the format of "notajetski#1447", **not** "notajetski-1447"
-	console.log(player_battletag);
+	debug(player_battletag);
 	getPlayerRank(player_battletag, function(err, data) {
 		if (err) {
 			res.status(500).send(err);
@@ -41,11 +43,11 @@ app.get("/players/:player_battletag", function(req, res) {
 						playerData.player_battletag = player_battletag;
 						res.json(playerData);
 					}).catch(function(err) {
-						console.log("Error retrieving data:", err);
+						debug("Error retrieving data:", err);
 						res.status(500).send(err);
 					});
 			}).catch(function(err) {
-				console.log("Error inserting data:", err);
+				debug("Error inserting data:", err);
 				res.status(500).send(err);
 			});
 		}
@@ -54,5 +56,5 @@ app.get("/players/:player_battletag", function(req, res) {
 
 var port = process.env.PORT || 1234;
 app.listen(port, function() {
-	console.log("Listening on " + port + "...");
+	debug("Listening on " + port + "...");
 });

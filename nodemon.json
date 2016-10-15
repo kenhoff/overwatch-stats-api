@@ -1,6 +1,8 @@
 {
 	"ignore": [
 		".git",
-		"static"
+		"static",
+		"pg_data",
+		"node_modules"
 	]
 }
