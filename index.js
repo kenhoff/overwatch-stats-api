@@ -16,9 +16,11 @@ const getPlayerRank = require("./getPlayerRank.js");
 app.use(express.static(__dirname + "/static"))
 
 app.get("/players/:player_battletag", function(req, res) {
-	let player_battletag = req.params.player_battletag;
-	// get latest player data before responding
-	getPlayerRank(req.params.player_battletag, function(err, data) {
+	// request should have the battletag in the format of "notajetski-1447" or "notajetski#1447"
+	let player_battletag = req.params.player_battletag.replace("-", "#");
+	// battletag should be passed to getPlayerRank in the format of "notajetski#1447", **not** "notajetski-1447"
+	console.log(player_battletag);
+	getPlayerRank(player_battletag, function(err, data) {
 		if (err) {
 			res.status(500).send(err);
 		} else {
