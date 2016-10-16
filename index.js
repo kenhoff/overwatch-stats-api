@@ -10,7 +10,7 @@ if (process.env.NODE_ENV != "production") {
 const express = require("express");
 const app = express();
 
-const knex = require("knex")(require("./knexfile.js"));
+const knex = require("knex")(require("./knexfile.js")[process.env.NODE_ENV || "dev"]);
 
 const getPlayerRank = require("./getPlayerRank.js");
 

@@ -5,9 +5,9 @@
 	"main": "index.js",
 	"scripts": {
 		"migrate-latest": "knex migrate:latest",
-		"start": "npm run migrate-latest && node index.js",
-		"test": "knex seed:run && mocha -b test/**/*.js",
-		"dev": "nodemon --exec 'npm run migrate-latest && npm test && DEBUG=ow-stats-api node index.js'",
+		"start": "NODE_ENV=dev npm run migrate-latest && node index.js",
+		"test": "NODE_ENV=dev knex seed:run && mocha -b test/**/*.js",
+		"dev": "NODE_ENV=dev nodemon --exec 'npm run migrate-latest && npm test && DEBUG=ow-stats-api node index.js'",
 		"dev-no-test": "nodemon --exec 'npm run migrate-latest && DEBUG=ow-stats-api node index.js'"
 	},
 	"repository": {
