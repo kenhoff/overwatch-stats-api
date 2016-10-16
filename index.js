@@ -1,4 +1,5 @@
 const debug = require("debug")("ow-stats-api");
+const sortObj = require("sort-object");
 
 debug("Starting up...");
 
@@ -10,8 +11,6 @@ const express = require("express");
 const app = express();
 
 const knex = require("knex")(require("./knexfile.js"));
-
-// knex.migrate.latest();
 
 const getPlayerRank = require("./getPlayerRank.js");
 
@@ -26,22 +25,20 @@ app.get("/players/:player_battletag", function(req, res) {
 	let player_battletag = req.params.player_battletag.replace("-", "#");
 
 	// first, enforce that it's a valid battletag
-	let battletagParts = player_battletag.split("#");
-	let battletagIdentifier = battletagParts[1];
-	if (battletagParts.length != 2 || isNaN(parseInt(battletagIdentifier))) {
+	if (!player_battletag.match(/[A-Za-z0-9]+#[0-9]+/)) {
 		return malformedBattleTagResponse(res);
 	}
 
 	// request should have the battletag in the format of "notajetski-1447" or "notajetski#1447"
 	// battletag should be passed to getPlayerRank in the format of "notajetski#1447", **not** "notajetski-1447"
-	debug(player_battletag);
 	getPlayerRank(player_battletag, function(err, data) {
 		if (err) {
 			res.status(500).send(err);
 		} else {
 			knex.insert({
 				player_battletag: player_battletag,
-				rank: data.rank
+				rank: data.rank,
+				timestamp: new Date().toISOString()
 			}).into("recorded-stats").then(function() {
 				knex.select("rank", "timestamp")
 					.from("recorded-stats")
@@ -54,6 +51,7 @@ app.get("/players/:player_battletag", function(req, res) {
 						let playerData = Object.assign({}, rows[0]);
 						playerData.history = rows;
 						playerData.player_battletag = player_battletag;
+						playerData = sortObj(playerData);
 						res.json(playerData);
 					}).catch(function(err) {
 						debug("Error retrieving data:", err);

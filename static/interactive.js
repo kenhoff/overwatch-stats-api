@@ -12,13 +12,11 @@ $("form").submit(function(event) {
 	$.get("/players/" + encodeURIComponent($("input").val()))
 		.done(function(data) {
 			// replace contents of pre/code in results section with data
-			console.log(data);
 			$(".results > pre > code").text(JSON.stringify(data, null, "    "));
 		})
-		.fail(function(jqxhr, textStatus, err) {
+		.fail(function(jqxhr) {
 			// replace contents of pre/code in results section with error
-			console.log(err);
-			$(".results > pre > code").text(err);
+			$(".results > pre > code").text(JSON.stringify(jqxhr.responseJSON, null, "	"));
 		})
 		.always(function() {
 			$(".hidden").removeClass("hidden");

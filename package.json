@@ -6,8 +6,9 @@
 	"scripts": {
 		"migrate-latest": "knex migrate:latest",
 		"start": "npm run migrate-latest && node index.js",
-		"test": "mocha -b",
-		"dev": "nodemon --exec 'npm run migrate-latest && npm test && DEBUG=ow-stats-api node index.js'"
+		"test": "knex seed:run && mocha -b test/**/*.js",
+		"dev": "nodemon --exec 'npm run migrate-latest && npm test && DEBUG=ow-stats-api node index.js'",
+		"dev-no-test": "nodemon --exec 'npm run migrate-latest && DEBUG=ow-stats-api node index.js'"
 	},
 	"repository": {
 		"type": "git",
@@ -26,8 +27,11 @@
 		"express": "^4.14.0",
 		"knex": "^0.12.2",
 		"pg": "^6.1.0",
+		"proxyquire": "^1.7.10",
 		"request": "^2.75.0",
-		"supertest": "^2.0.0"
+		"sort-object": "^3.0.2",
+		"supertest": "^2.0.0",
+		"timekeeper": "^0.1.1"
 	},
 	"engines": {
 		"node": "^6.0.0"
