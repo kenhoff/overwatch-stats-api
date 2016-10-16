@@ -16,6 +16,10 @@ const getPlayerRank = require("./getPlayerRank.js");
 
 app.use(express.static(__dirname + "/static"));
 
+app.get("/favicon.ico", function(req, res) {
+	res.sendFile(__dirname + "/static/img/icon.png");
+});
+
 app.get("/players", function(req, res) {
 	return malformedBattleTagResponse(res);
 });
