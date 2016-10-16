@@ -69,7 +69,7 @@ describe("valid battletags", function() {
 		after(function() {
 			tk.reset();
 		});
-	})
+	});
 
 	it("(player exists, but does not have ranked info) ??????");
 	it("(player does not exist) /players/asdfasdfasdf-1234) -> 404");
