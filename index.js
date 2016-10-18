@@ -70,6 +70,7 @@ var sendPlayerData = function(player_battletag, res) {
 			player_battletag: player_battletag
 		})
 		.orderBy("timestamp", "desc")
+		.limit(100)
 		.then(function(rows) {
 			if (rows.length == 0) {
 				return res.status(404).send({

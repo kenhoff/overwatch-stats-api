@@ -33,7 +33,18 @@ var testData = [{
 	timestamp: new Date(2016, 0, 3)
 }];
 
+for (var i = 0; i < 200; i++) {
+	testData.push({
+		player_battletag: "userWith200Recordings#1234",
+		rank: Math.floor((i / 200) * 5000),
+		timestamp: new Date(i * 1000)
+	});
+}
+
+// console.log(testData);
+
 exports.seed = function(knex, Promise) {
+	console.log("seeding...");
 	// Deletes ALL existing entries
 	return knex("recorded-stats").del()
 		.then(function() {
