@@ -1,3 +1,5 @@
+const debug = require("debug")("ow-stats-api:tests");
+
 var testData = [{
 	player_battletag: "notajetski#1447",
 	rank: 2500,
@@ -50,7 +52,7 @@ exports.seed = function(knex, Promise) {
 			return Promise.all([
 				// Inserts seed entries
 				knex("recorded-stats").insert(testData).then(function() {
-					console.log("done inserting data?");
+					debug("Done loading in test data");
 				})
 			]);
 		});

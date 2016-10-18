@@ -4,11 +4,9 @@ const knex = require("knex")(require("../../knexfile.js")["dev"]);
 
 describe("response formatting", function() {
 	var server;
-	// 	describe("limit history to 100 items", function() {
 	var getPlayerRankStub = function(player_battletag, cb) {
 		cb("Got a non-200 response from playoverwatch.com");
 	};
-	//
 	before(function(done) {
 		knex.seed.run().then(function() {
 			done();
@@ -23,7 +21,6 @@ describe("response formatting", function() {
 	after(function() {
 		server.close();
 	});
-	//
 	var responseData = {
 		player_battletag: "userWith200Recordings#1234",
 		history: []
