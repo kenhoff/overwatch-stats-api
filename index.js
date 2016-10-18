@@ -41,7 +41,7 @@ app.get("/players/:player_battletag", function(req, res) {
 		} else {
 			knex.insert({
 				player_battletag: player_battletag,
-				rank: data.rank,
+				rank: (data.rank == "" ? null : data.rank), // if there isn't a rank on the player, don't send an empty string to the DB
 				timestamp: new Date().toISOString()
 			}).into("recorded-stats").then(function() {
 				knex.select("rank", "timestamp")
@@ -54,7 +54,16 @@ app.get("/players/:player_battletag", function(req, res) {
 						// build response object
 						let playerData = Object.assign({}, rows[0]);
 						playerData.history = rows;
+						// remove all the null ranks from history
+						for (var historyItem of playerData.history) {
+							if (historyItem.rank == null) {
+								delete historyItem.rank;
+							}
+						}
 						playerData.player_battletag = player_battletag;
+						if (playerData.rank == null) {
+							delete playerData.rank;
+						}
 						playerData = sortObj(playerData);
 						res.json(playerData);
 					}).catch(function(err) {

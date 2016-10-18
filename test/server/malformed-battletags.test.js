@@ -19,6 +19,9 @@ describe("malformed battletags", function() {
 	var testMalformedBattletag = function(url, done) {
 		request(server)
 			.get(url)
+			.expect(function () {
+				console.log("made request");
+			})
 			.expect(400)
 			.expect({
 				"status": "error",
@@ -33,6 +36,7 @@ describe("malformed battletags", function() {
 		server = require("../../index.js");
 	});
 	it("/players/ -> 400", function(done) {
+		console.log("made it into first test");
 		testMalformedBattletag("/players/", done);
 	});
 	it("/players/notajetski -> 400", function(done) {
