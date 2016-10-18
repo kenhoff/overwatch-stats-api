@@ -36,47 +36,73 @@ app.get("/players/:player_battletag", function(req, res) {
 	// request should have the battletag in the format of "notajetski-1447" or "notajetski#1447"
 	// battletag should be passed to getPlayerRank in the format of "notajetski#1447", **not** "notajetski-1447"
 	getPlayerRank(player_battletag, function(err, data) {
-		if (err) {
-			res.status(500).send(err);
-		} else {
-			knex.insert({
-				player_battletag: player_battletag,
-				rank: (data.rank == "" ? null : data.rank), // if there isn't a rank on the player, don't send an empty string to the DB
-				timestamp: new Date().toISOString()
-			}).into("recorded-stats").then(function() {
-				knex.select("rank", "timestamp")
-					.from("recorded-stats")
-					.where({
-						player_battletag: player_battletag
-					})
-					.orderBy("timestamp", "desc")
-					.then(function(rows) {
-						// build response object
-						let playerData = Object.assign({}, rows[0]);
-						playerData.history = rows;
-						// remove all the null ranks from history
-						for (var historyItem of playerData.history) {
-							if (historyItem.rank == null) {
-								delete historyItem.rank;
-							}
-						}
-						playerData.player_battletag = player_battletag;
-						if (playerData.rank == null) {
-							delete playerData.rank;
-						}
-						playerData = sortObj(playerData);
-						res.json(playerData);
-					}).catch(function(err) {
-						debug("Error retrieving data:", err);
-						res.status(500).send(err);
-					});
-			}).catch(function(err) {
-				debug("Error inserting data:", err);
-				res.status(500).send(err);
+		// if there's an error in getting a player's data, don't necessarily bail
+		// if you get the data, great, save it to the db
+		// if you don't get the data, no worries
+		// in either case, look up the data in the DB and send it out
+		if (!err) {
+			attemptToSavePlayerDataToDB(player_battletag, data, function() {
+				sendPlayerData(player_battletag, res);
 			});
+		} else {
+			sendPlayerData(player_battletag, res);
 		}
 	});
 });
+
+var attemptToSavePlayerDataToDB = function(player_battletag, data, cb) {
+	knex.insert({
+		player_battletag: player_battletag,
+		rank: (data.rank == "" ? null : data.rank), // if there isn't a rank on the player, don't send an empty string to the DB
+		timestamp: new Date().toISOString()
+	}).into("recorded-stats").asCallback(function(err) {
+		if (err) {
+			debug("Error saving player data to DB:", err);
+		}
+		cb();
+	});
+
+	// .then(function() {
+	// }).catch(function(err) {
+	// 	debug("Error inserting data:", err);
+	// 	res.status(500).send(err);
+	// });
+};
+
+var sendPlayerData = function(player_battletag, res) {
+	knex.select("rank", "timestamp")
+		.from("recorded-stats")
+		.where({
+			player_battletag: player_battletag
+		})
+		.orderBy("timestamp", "desc")
+		.then(function(rows) {
+			if (rows.length == 0) {
+				return res.status(404).send({
+					"status": "error",
+					"error": "We can't find a user with the battletag " + player_battletag + ". Check the capitalization of the battletag. This might be because of a temporary issue on the Overwatch servers, so if you're sure everything is correct, try again in a few minutes."
+				});
+			}
+			// build response object
+			let playerData = Object.assign({}, rows[0]);
+			playerData.history = rows;
+			// remove all the null ranks from history
+			for (var historyItem of playerData.history) {
+				if (historyItem.rank == null) {
+					delete historyItem.rank;
+				}
+			}
+			playerData.player_battletag = player_battletag;
+			if (playerData.rank == null) {
+				delete playerData.rank;
+			}
+			playerData = sortObj(playerData);
+			res.json(playerData);
+		}).catch(function(err) {
+			debug("Error retrieving data:", err);
+			res.status(500).send(err);
+		});
+};
 
 var malformedBattleTagResponse = function(res) {
 	return res.status(400).send({
