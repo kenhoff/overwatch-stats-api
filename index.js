@@ -61,12 +61,6 @@ var attemptToSavePlayerDataToDB = function(player_battletag, data, cb) {
 		}
 		cb();
 	});
-
-	// .then(function() {
-	// }).catch(function(err) {
-	// 	debug("Error inserting data:", err);
-	// 	res.status(500).send(err);
-	// });
 };
 
 var sendPlayerData = function(player_battletag, res) {
