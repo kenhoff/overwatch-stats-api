@@ -5,8 +5,10 @@ const knex = require("knex")(require("../../knexfile.js")["dev"]);
 
 describe("ranked, unranked, unavailable, unknown players", function() {
 	var server;
-	beforeEach(function() {
-		knex.seed.run();
+	beforeEach(function(done) {
+		knex.seed.run().then(function () {
+			done();
+		});
 	});
 	afterEach(function() {
 		server.close();

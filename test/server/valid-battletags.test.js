@@ -23,8 +23,11 @@ describe("valid battletags", function() {
 	};
 
 	// set up server with getPlayerRank stubbed out
-	beforeEach(function() {
-		knex.seed.run(); // because the database is actually modified every time that we get the latest data, gotta reseed it after every test ¯\_(ツ)_/¯
+	beforeEach(function(done) {
+		knex.seed.run().then(function() {
+			done();
+		});
+		// because the database is actually modified every time that we get the latest data, gotta reseed it after every test ¯\_(ツ)_/¯
 		// bust the cache...
 		delete require.cache[require.resolve("../../index.js")];
 		server = proxyquire("../../index.js", {

@@ -9,8 +9,11 @@ describe("response formatting", function() {
 		cb("Got a non-200 response from playoverwatch.com");
 	};
 	//
-	before(function() {
-		knex.seed.run();
+	before(function(done) {
+		knex.seed.run().then(function() {
+			done();
+		});
+
 		// bust the cache...
 		delete require.cache[require.resolve("../../index.js")];
 		server = proxyquire("../../index.js", {
@@ -36,6 +39,7 @@ describe("response formatting", function() {
 	it("/players/userWith200Recordings-1234 -> 200 and length of history is 100", function(done) {
 		request(server)
 			.get("/players/userWith200Recordings-1234")
+			.expect(200)
 			.expect(function(res) {
 				if (res.body.history.length > 100) {
 					throw "response body history has more than 100 items";

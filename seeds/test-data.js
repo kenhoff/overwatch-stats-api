@@ -44,13 +44,14 @@ for (var i = 0; i < 200; i++) {
 // console.log(testData);
 
 exports.seed = function(knex, Promise) {
-	console.log("seeding...");
 	// Deletes ALL existing entries
 	return knex("recorded-stats").del()
 		.then(function() {
 			return Promise.all([
 				// Inserts seed entries
-				knex("recorded-stats").insert(testData)
+				knex("recorded-stats").insert(testData).then(function() {
+					console.log("done inserting data?");
+				})
 			]);
 		});
 };
