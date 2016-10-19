@@ -33,7 +33,6 @@ describe("valid battletags", function() {
 		server = proxyquire("../../index.js", {
 			"./getPlayerRank.js": getPlayerRankStub
 		});
-		tk.freeze(new Date(2016, 0, 6));
 	});
 
 	afterEach(function() {

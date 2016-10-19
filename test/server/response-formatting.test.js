@@ -1,6 +1,7 @@
 const request = require("supertest");
 const proxyquire = require("proxyquire");
 const knex = require("knex")(require("../../knexfile.js")["dev"]);
+const assert = require("assert");
 
 describe("response formatting", function() {
 	var server;
@@ -38,9 +39,7 @@ describe("response formatting", function() {
 			.get("/players/userWith200Recordings-1234")
 			.expect(200)
 			.expect(function(res) {
-				if (res.body.history.length > 100) {
-					throw "response body history has more than 100 items";
-				}
+				assert(res.body.history.length <= 100, "response body history has more than 100 items");
 			})
 			.expect(responseData)
 			.end(done);

@@ -1,5 +1,6 @@
 const debug = require("debug")("ow-stats-api");
 const sortObj = require("sort-object");
+const moment = require("moment");
 
 debug("Starting up...");
 
@@ -35,20 +36,48 @@ app.get("/players/:player_battletag", function(req, res) {
 
 	// request should have the battletag in the format of "notajetski-1447" or "notajetski#1447"
 	// battletag should be passed to getPlayerRank in the format of "notajetski#1447", **not** "notajetski-1447"
-	getPlayerRank(player_battletag, function(err, data) {
-		// if there's an error in getting a player's data, don't necessarily bail
-		// if you get the data, great, save it to the db
-		// if you don't get the data, no worries
-		// in either case, look up the data in the DB and send it out
-		if (!err) {
-			attemptToSavePlayerDataToDB(player_battletag, data, function() {
-				sendPlayerData(player_battletag, res);
+	checkIfLatestDataIsMoreThan5MinsOld(player_battletag, function(isMoreThanFiveMinsOld) {
+		if (isMoreThanFiveMinsOld) {
+			getPlayerRank(player_battletag, function(err, data) {
+				// if there's an error in getting a player's data, don't necessarily bail
+				// if you get the data, great, save it to the db
+				// if you don't get the data, no worries
+				// in either case, look up the data in the DB and send it out
+				if (!err) {
+					attemptToSavePlayerDataToDB(player_battletag, data, function() {
+						sendPlayerData(player_battletag, res);
+					});
+				} else {
+					sendPlayerData(player_battletag, res);
+				}
 			});
 		} else {
 			sendPlayerData(player_battletag, res);
 		}
 	});
 });
+
+var checkIfLatestDataIsMoreThan5MinsOld = function(player_battletag, cb) {
+	knex.select("rank", "timestamp")
+		.from("recorded-stats")
+		.where({
+			player_battletag: player_battletag
+		})
+		.orderBy("timestamp", "desc")
+		.limit(1)
+		.then(function(rows) {
+			if (rows.length == 0) {
+				return cb(true);
+			}
+			// calculate 5 minutes ago
+			var fiveMinutes = moment.duration(5, "minutes");
+			if ((moment(new Date()).valueOf() - fiveMinutes) > moment(new Date(rows[0].timestamp)).valueOf()) {
+				return cb(true);
+			} else {
+				return cb(false);
+			}
+		});
+};
 
 var attemptToSavePlayerDataToDB = function(player_battletag, data, cb) {
 	knex.insert({

@@ -1,4 +1,5 @@
 const debug = require("debug")("ow-stats-api:tests");
+const moment = require("moment");
 
 var testData = [{
 	player_battletag: "notajetski#1447",
@@ -33,6 +34,14 @@ var testData = [{
 	player_battletag: "unavailable#1234",
 	rank: 2300,
 	timestamp: new Date(2016, 0, 3)
+}, {
+	player_battletag: "fourMinutesAgo#1234",
+	rank: 2500,
+	timestamp: moment(1234567890).subtract(4, "minutes")
+}, {
+	player_battletag: "sixMinutesAgo#1234",
+	rank: 2500,
+	timestamp: moment(1234567890).subtract(6, "minutes")
 }];
 
 for (var i = 0; i < 200; i++) {

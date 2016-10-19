@@ -1,42 +1,44 @@
 {
-	"name": "overwatch-stats-api",
-	"version": "0.0.1",
-	"description": "Overwatch Stats API",
-	"main": "index.js",
-	"scripts": {
-		"migrate-latest": "knex migrate:latest",
-		"start": "NODE_ENV=dev npm run migrate-latest && node index.js",
-		"test": "NODE_ENV=dev knex seed:run && mocha -b test/**/*.js",
-		"dev": "NODE_ENV=dev nodemon --exec 'npm run migrate-latest && npm test && DEBUG=ow-stats-api node index.js'",
-		"dev-no-test": "NODE_ENV=dev nodemon --exec 'npm run migrate-latest && DEBUG=ow-stats-api node index.js'"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/kenhoff/overwatch-stats-api.git"
-	},
-	"author": "",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/kenhoff/overwatch-stats-api/issues"
-	},
-	"homepage": "https://github.com/kenhoff/overwatch-stats-api#readme",
-	"dependencies": {
-		"cheerio": "^0.22.0",
-		"debug": "^2.2.0",
-		"dotenv": "^2.0.0",
-		"express": "^4.14.0",
-		"knex": "^0.12.2",
-		"pg": "^6.1.0",
-		"proxyquire": "^1.7.10",
-		"request": "^2.75.0",
-		"sort-object": "^3.0.2",
-		"supertest": "^2.0.0",
-		"timekeeper": "^0.1.1"
-	},
-	"engines": {
-		"node": "^6.0.0"
-	},
-	"devDependencies": {
-		"mocha": "^3.1.2"
-	}
+  "name": "overwatch-stats-api",
+  "version": "0.0.1",
+  "description": "Overwatch Stats API",
+  "main": "index.js",
+  "scripts": {
+    "migrate-latest": "knex migrate:latest",
+    "start": "NODE_ENV=dev npm run migrate-latest && node index.js",
+    "test": "NODE_ENV=dev knex seed:run && mocha -b test/**/*.js",
+    "dev": "NODE_ENV=dev nodemon --exec 'npm run migrate-latest && npm test && DEBUG=ow-stats-api node index.js'",
+    "dev-no-test": "NODE_ENV=dev nodemon --exec 'npm run migrate-latest && DEBUG=ow-stats-api node index.js'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kenhoff/overwatch-stats-api.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kenhoff/overwatch-stats-api/issues"
+  },
+  "homepage": "https://github.com/kenhoff/overwatch-stats-api#readme",
+  "dependencies": {
+    "cheerio": "^0.22.0",
+    "debug": "^2.2.0",
+    "dotenv": "^2.0.0",
+    "express": "^4.14.0",
+    "knex": "^0.12.2",
+    "moment": "^2.15.1",
+    "pg": "^6.1.0",
+    "proxyquire": "^1.7.10",
+    "request": "^2.75.0",
+    "sinon": "^1.17.6",
+    "sort-object": "^3.0.2",
+    "supertest": "^2.0.0",
+    "timekeeper": "^0.1.1"
+  },
+  "engines": {
+    "node": "^6.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^3.1.2"
+  }
 }
